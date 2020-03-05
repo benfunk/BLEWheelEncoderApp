@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Wheel Encoder</string>
+    <string name="edit_message">Enter a Message</string>
+    <string name="button_send">Send</string>
+    <string name="title_activity_wheel_status">WheelStatusActivity</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="button_scan">Start Scan</string>
+    <string name="button_stop_scan">Stop Scan</string>
+</resources>
