@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -31,17 +32,19 @@ public class MainActivity extends AppCompatActivity {
     BluetoothManager btManager;
     BluetoothAdapter btAdapter;
     BluetoothLeScanner btScanner;
-    Button startScanningButton;
-    Button stopScanningButton;
+    Button scanButton;
     TextView peripheralTextView;
     private final static int REQUEST_ENABLE_BT = 1;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    boolean deviceListEmpty;
+    private boolean deviceListEmpty;
+    private boolean isScanning = false;
 
     ListView deviceListView;
     private ArrayList<String> devicesArray;
+    private ArrayList<BluetoothDevice> bluetoothDeviceList;
     ArrayAdapter<String> devListAdapter;
     public static final String EXTRA_MESSAGE = "com.example.wheelencoder.MESSAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         deviceListEmpty = true;
         devicesArray = new ArrayList<String>();
+        bluetoothDeviceList = new ArrayList<BluetoothDevice>();
         devicesArray.add("No Devices Found");
         devListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, devicesArray);
@@ -57,23 +61,15 @@ public class MainActivity extends AppCompatActivity {
         deviceListView.setAdapter(devListAdapter);
         deviceListView.setOnItemClickListener(messageClickedHandler);
 
-        peripheralTextView = (TextView) findViewById(R.id.deviceListTextView);
+        peripheralTextView = (TextView) findViewById(R.id.deviceTextView);
         peripheralTextView.setMovementMethod(new ScrollingMovementMethod());
 
-        startScanningButton = (Button) findViewById(R.id.startScanButton);
-        startScanningButton.setOnClickListener(new View.OnClickListener() {
+        scanButton = (Button) findViewById(R.id.bleScanButton);
+        scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startScanning();
+                toggleBleScanning();
             }
         });
-
-        stopScanningButton = (Button) findViewById(R.id.stopScanButton);
-        stopScanningButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                stopScanning();
-            }
-        });
-        stopScanningButton.setVisibility(View.INVISIBLE);
 
         btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         btAdapter = btManager.getAdapter();
@@ -105,18 +101,37 @@ public class MainActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener messageClickedHandler = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView parent, View v, int position, long id) {
             // Do something in response to the click
-            String value = (String) deviceListView.getItemAtPosition(position);
-            EditText editText = (EditText) findViewById(R.id.editText);
+            //String value = (String) deviceListView.getItemAtPosition(position);
+            String value = (String) bluetoothDeviceList.get(position).getAddress();
+            EditText editText = (EditText) findViewById(R.id.bdaddr_text);
             editText.setText(value);
+
+            Button button = (Button)findViewById(R.id.button_connect);
+            button.setEnabled(true);
         }
     };
         /** Called when the user taps the Send button */
     public void showWheelStatus(View view) {
         Intent intent = new Intent(this, WheelStatusActivity.class);
-        EditText editText = (EditText) findViewById(R.id.editText);
+        EditText editText = (EditText) findViewById(R.id.bdaddr_text);
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
+    }
+
+    public void toggleBleScanning() {
+        if (isScanning == false)
+        {
+            startScanning();
+            scanButton.setText("Stop Scanning");
+            isScanning = true;
+        }
+        else
+        {
+            stopScanning();
+            scanButton.setText("Start Scanning");
+            isScanning = false;
+        }
     }
 
     // Device scan callback.
@@ -138,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         if (deviceListEmpty)
                             devListAdapter.clear();
                         devListAdapter.add(name);
+                        bluetoothDeviceList.add(result.getDevice());
                         deviceListEmpty = false;
                     }
                 }
@@ -173,8 +189,6 @@ public class MainActivity extends AppCompatActivity {
     public void startScanning() {
         System.out.println("start scanning");
         peripheralTextView.setText("");
-        startScanningButton.setVisibility(View.INVISIBLE);
-        stopScanningButton.setVisibility(View.VISIBLE);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -186,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
     public void stopScanning() {
         System.out.println("stopping scanning");
         peripheralTextView.append("Stopped Scanning");
-        startScanningButton.setVisibility(View.VISIBLE);
-        stopScanningButton.setVisibility(View.INVISIBLE);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

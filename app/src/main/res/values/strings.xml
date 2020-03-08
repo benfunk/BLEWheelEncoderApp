@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">Wheel Encoder</string>
-    <string name="edit_message">Enter a Message</string>
-    <string name="button_send">Send</string>
+    <string name="selected_address_text">Select BT Device...</string>
+    <string name="button_connect_text">Connect</string>
     <string name="title_activity_wheel_status">WheelStatusActivity</string>
     <!-- Strings used for fragments for navigation -->
 
-    <string name="button_scan">Start Scan</string>
-    <string name="button_stop_scan">Stop Scan</string>
+    <string name="button_scan_text">Start Scan</string>
+    <string name="button_stop_scan_text">Stop Scan</string>
+    <string name="button_read_char">Read Counter</string>
+    <string name="button_enable_notify">Enable Notification</string>
+    <string name="counter_value">Wait for Count</string>
 </resources>

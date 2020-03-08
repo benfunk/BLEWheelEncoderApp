@@ -1,18 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".WheelStatusActivity">
 
+    <LinearLayout
+        android:id="@+id/cpr_row"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cpr_label"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:text="CPR"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/cpr_value"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:ems="10"
+            android:inputType="number"
+            android:text="-"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/button_read_cpr"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="readCPR"
+            android:text="Read" />
+
+        <Button
+            android:id="@+id/button_write_cpr"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="writeCPR"
+            android:text="Write" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/diam_row"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/diam_label"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:text="Diameter"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/diam_value"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:ems="10"
+            android:inputType="number"
+            android:text="-"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/button_read_diam"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="readWheelDiameter"
+            android:text="Read" />
+
+        <Button
+            android:id="@+id/button_write_diam"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Write" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_weight="0"
+        android:background="?android:attr/listDivider" />
+
+    <Button
+        android:id="@+id/button_readCount"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:onClick="readWheelCount"
+        android:text="@string/button_read_char" />
+
+    <Button
+        android:id="@+id/button_enableNotify"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:onClick="enableWheelCountNotify"
+        android:text="@string/button_enable_notify" />
+
+    <EditText
+        android:id="@+id/counter_value"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:autofillHints=""
+        android:ems="10"
+        android:inputType="number"
+        android:text="--"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="4" />
+
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="249dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="64dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:id="@+id/status_textView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:text="Status" />
+
+</LinearLayout>
