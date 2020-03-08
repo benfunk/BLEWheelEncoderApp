@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         deviceListEmpty = true;
         devicesArray = new ArrayList<String>();
         bluetoothDeviceList = new ArrayList<BluetoothDevice>();
@@ -102,12 +101,15 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView parent, View v, int position, long id) {
             // Do something in response to the click
             //String value = (String) deviceListView.getItemAtPosition(position);
-            String value = (String) bluetoothDeviceList.get(position).getAddress();
-            EditText editText = (EditText) findViewById(R.id.bdaddr_text);
-            editText.setText(value);
+            if (bluetoothDeviceList.size() > 0) {
+                String value = (String) bluetoothDeviceList.get(position).getAddress();
+                EditText editText = (EditText) findViewById(R.id.bdaddr_text);
+                editText.setText(value);
 
-            Button button = (Button)findViewById(R.id.button_connect);
-            button.setEnabled(true);
+                Button button = (Button) findViewById(R.id.button_connect);
+                button.setEnabled(true);
+            }
+
         }
     };
         /** Called when the user taps the Send button */

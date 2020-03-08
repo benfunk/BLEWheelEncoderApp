@@ -11,11 +11,13 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
+
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.UUID;
@@ -61,6 +63,9 @@ public class WheelStatusActivity extends AppCompatActivity {
     BluetoothGattCharacteristic cprCharacteristic = null;
     BluetoothGattCharacteristic diameterCharacteristic = null;
 
+    int displayCPR = 30;
+    int displayCount = 10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +85,29 @@ public class WheelStatusActivity extends AppCompatActivity {
         BluetoothDevice btDevice = btAdapter.getRemoteDevice(message);
 
         btDevice.connectGatt(this, false, gattCallback);
+    }
+
+    public void updateCountDisplay(int count) {
+        displayCount = count % displayCPR;
+        updateChart();
+    }
+
+    public void updateCPRDisplay(int CPR) {
+        displayCPR = CPR;
+        displayCount = displayCount % displayCPR;
+        updateChart();
+    }
+
+    public void updateChart(){
+        // Update the text in a center of the chart:
+        TextView numberOfCals = findViewById(R.id.wheel_count_progress);
+        numberOfCals.setText(String.valueOf(displayCount) + " / " + displayCPR);
+
+        // Calculate the slice size and update the pie chart:
+        ProgressBar pieChart = findViewById(R.id.stats_progressbar);
+        double d = (double) displayCount / (double) displayCPR;
+        int progress = (int) (d * 100);
+        pieChart.setProgress(progress);
     }
 
     /** Called when the user taps the read button */
@@ -209,12 +237,14 @@ public class WheelStatusActivity extends AppCompatActivity {
                             TextView textView = findViewById(R.id.counter_value);
                             String value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT32, 0).toString();
                             textView.setText(value);
+                            updateCountDisplay(Integer.parseInt(value));
                         }
                         else if (characteristic.getUuid().equals(UUID_CPR_CHAR))
                         {
                             TextView textView = findViewById(R.id.cpr_value);
                             String value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0).toString();
                             textView.setText(value);
+                            updateCPRDisplay(Integer.parseInt(value));
                         }
                         else if (characteristic.getUuid().equals(UUID_DIAMETER_CHAR))
                         {
@@ -234,6 +264,8 @@ public class WheelStatusActivity extends AppCompatActivity {
                         TextView textView = findViewById(R.id.counter_value);
                         String value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT32, 0).toString();
                         textView.setText(value);
+
+                        updateCountDisplay(Integer.parseInt(value));
                     }
                     // broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
                 }
