@@ -87,14 +87,20 @@ public class WheelStatusActivity extends AppCompatActivity {
         btDevice.connectGatt(this, false, gattCallback);
     }
 
+    private int mod(int x, int y)
+    {
+        int result = x % y;
+        return result < 0 ? result + y : result;
+    }
+
     public void updateCountDisplay(int count) {
-        displayCount = count % displayCPR;
+        displayCount = mod(count, displayCPR);
         updateChart();
     }
 
     public void updateCPRDisplay(int CPR) {
         displayCPR = CPR;
-        displayCount = displayCount % displayCPR;
+        displayCount = mod(displayCount, displayCPR);
         updateChart();
     }
 

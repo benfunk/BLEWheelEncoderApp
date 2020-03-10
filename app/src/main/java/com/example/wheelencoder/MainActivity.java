@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             String name = result.getDevice().getName();
+            String bdaddr = result.getDevice().getAddress();
             peripheralTextView.append("Device Name: " + name + " rssi: " + result.getRssi() + "\n");
 
             // auto scroll for text view
@@ -149,15 +150,13 @@ public class MainActivity extends AppCompatActivity {
             if (scrollAmount > 0)
                 peripheralTextView.scrollTo(0, scrollAmount);
 
-            if (name != null) {
-                if (!devicesArray.contains(name)) {
-                    if (name.contains("Wheel")) {
-                        if (deviceListEmpty)
-                            devListAdapter.clear();
-                        devListAdapter.add(name);
-                        bluetoothDeviceList.add(result.getDevice());
-                        deviceListEmpty = false;
-                    }
+            if (!bluetoothDeviceList.contains(result.getDevice()) && name != null) {
+                if (name.contains("Wheel")) {
+                    if (deviceListEmpty)
+                        devListAdapter.clear();
+                    devListAdapter.add(name);
+                    bluetoothDeviceList.add(result.getDevice());
+                    deviceListEmpty = false;
                 }
             }
         }
