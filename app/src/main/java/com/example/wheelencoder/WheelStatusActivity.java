@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -138,6 +139,13 @@ public class WheelStatusActivity extends AppCompatActivity {
         Log.i(TAG, "Read CPR button pressed");
         if ((connectionState == STATE_CONNECTED) && (cprCharacteristic != null))
         {
+            EditText cprEditText = findViewById((R.id.cpr_value));
+            String temp = cprEditText.getText().toString();
+            int value=0;
+            if (!temp.isEmpty()) {
+            value=Integer.parseInt(temp);
+            }
+            cprCharacteristic.setValue(value, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
             bluetoothGatt.writeCharacteristic(cprCharacteristic);
         }
     }
@@ -149,6 +157,23 @@ public class WheelStatusActivity extends AppCompatActivity {
         {
             bluetoothGatt.readCharacteristic(diameterCharacteristic);
         }
+    }
+
+    /**Called when user taps the write diameter button*/
+    public void writeWheelDiameter(View view) {
+        Log.i(TAG, "write wheel diameter");
+        if ((connectionState == STATE_CONNECTED) && (diameterCharacteristic != null))
+        {
+            EditText diamEditText = findViewById((R.id.diam_value));
+            String temp = diamEditText.getText().toString();
+            int value=0;
+            if (!temp.isEmpty()) {
+                value=Integer.parseInt(temp);
+            }
+            diameterCharacteristic.setValue(value, BluetoothGattCharacteristic.FORMAT_UINT32, 0);
+            bluetoothGatt.writeCharacteristic(diameterCharacteristic);
+        }
+
     }
 
     /** Called when the user taps the read button */
